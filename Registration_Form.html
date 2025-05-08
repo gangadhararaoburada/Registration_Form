@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #6b48ff, #00ddeb, #ff007a, #ffd700);
+            background-size: 400%;
+            animation: gradient 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 20px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            animation: slideIn 0.5s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        label {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            color: #fff;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            background: transparent;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            height: 50px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        input:not(:placeholder-shown) {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        input:focus + label,
+        input:not(:placeholder-shown) + label {
+            top: -20px;
+            left: 10px;
+            font-size: 14px;
+            color: #ffd700;
+        }
+
+        .error {
+            border: 2px solid #ff4d4d !important;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            font-size: 12px;
+            position: absolute;
+            bottom: -20px;
+            left: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error + .error-message {
+            opacity: 1;
+        }
+
+        button[type="submit"] {
+            height: 50px;
+            background: linear-gradient(45deg, #ff007a, #ffd700);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button[type="submit"]:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button[type="submit"]::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        button[type="submit"]:hover::after {
+            left: 100%;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+            animation: popupFade 0.3s ease-out;
+        }
+
+        .popup.show {
+            display: block;
+        }
+
+        @keyframes popupFade {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .popup h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .popup button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .popup button:hover {
+            background: #3e8e41;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+            .popup {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="registrationForm">
+            <h2>Registration Form</h2>
+            <div class="form-group">
+                <input type="text" id="username" name="username" placeholder=" " required>
+                <label for="username">Username</label>
+                <span class="error-message">Username must be at least 3 characters</span>
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" name="email" placeholder=" " required>
+                <label for="email">Email</label>
+                <span class="error-message">Please enter a valid email</span>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" placeholder=" " required>
+                <label for="password">Password</label>
+                <span class="error-message">Password must be at least 8 characters</span>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <h3>Registration Successful!</h3>
+        <p>Your account has been created successfully.</p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+    <script>
+        /**
+         * Form Validation Module
+         */
+        const FormValidator = (() => {
+            const selectors = {
+                form: '#registrationForm',
+                username: '#username',
+                email: '#email',
+                password: '#password',
+                overlay: '#overlay',
+                popup: '#popup',
+                errorClass: 'error'
+            };
+
+            const validationRules = {
+                username: {
+                    minLength: 3,
+                    errorMessage: 'Username must be at least 3 characters'
+                },
+                email: {
+                    regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    errorMessage: 'Please enter a valid email'
+                },
+                password: {
+                    minLength: 8,
+                    errorMessage: 'Password must be at least 8 characters'
+                }
+            };
+
+            function init() {
+                const form = document.querySelector(selectors.form);
+                if (!form) {
+                    console.error('Registration form not found');
+                    return;
+                }
+                setupEventListeners(form);
+            }
+
+            function setupEventListeners(form) {
+                form.addEventListener('submit', handleSubmit);
+                ['username', 'email', 'password'].forEach(field => {
+                    const input = document.querySelector(selectors[field]);
+                    input.addEventListener('input', () => clearError(input));
+                });
+            }
+
+            function handleSubmit(event) {
+                event.preventDefault();
+                const form = event.target;
+                let isValid = true;
+
+                Object.keys(validationRules).forEach(field => {
+                    const input = form.querySelector(selectors[field]);
+                    if (!validateField(field, input)) {
+                        showError(input);
+                        isValid = false;
+                    }
+                });
+
+                if (isValid) {
+                    showPopup();
+                    form.reset();
+                }
+            }
+
+            function validateField(field, input) {
+                const value = input.value;
+                const rules = validationRules[field];
+
+                switch (field) {
+                    case 'username':
+                        return value.length >= rules.minLength;
+                    case 'email':
+                        return rules.regex.test(value);
+                    case 'password':
+                        return value.length >= rules.minLength;
+                    default:
+                        return false;
+                }
+            }
+
+            function showError(input) {
+                input.classList.add(selectors.errorClass);
+            }
+
+            function clearError(input) {
+                input.classList.remove(selectors.errorClass);
+            }
+
+            function showPopup() {
+                const overlay = document.querySelector(selectors.overlay);
+                const popup = document.querySelector(selectors.popup);
+                overlay.classList.add('show');
+                popup.classList.add('show');
+            }
+
+            return {
+                init
+            };
+        })();
+
+        function closePopup() {
+            const overlay = document.querySelector('#overlay');
+            const popup = document.querySelector('#popup');
+            overlay.classList.remove('show');
+            popup.classList.remove('show');
+            // Reset labels
+            document.querySelectorAll('label').forEach(label => {
+                label.style.top = '12px';
+                label.style.fontSize = '16px';
+                label.style.color = '#fff';
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', FormValidator.init);
+    </script>
+</body>
+</html>
